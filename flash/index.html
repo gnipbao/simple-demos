@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Flash check</title>
+</head>
+
+<body>
+    <h1>check if has flash</h1>
+    <div id="data">
+
+    </div>
+    <script src="./main.js"></script>
+
+    <script>
+
+
+        var flash = flashCheck();
+        log('has flash->' + flash.hasFlash);
+        console.dir(flash);
+
+        function log(msg) {
+            document.getElementById('data').innerHTML += msg + '<br><br>';
+        };
+    </script>
+</body>
+
+</html>
