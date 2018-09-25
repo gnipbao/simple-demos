@@ -1,0 +1,23 @@
+{
+  "name": "exampl",
+  "version": "1.0.0",
+  "description": "Simple examples of HTML, CSS, Javascript and npm package playgroud",
+  "main": "index.js",
+  "scripts": {
+    "dev": "http-server -p 3005"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnipbao/exampl.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gnipbao/exampl/issues"
+  },
+  "homepage": "https://github.com/gnipbao/exampl#readme",
+  "devDependencies": {
+    "http-server": "^0.11.1"
+  }
+}
