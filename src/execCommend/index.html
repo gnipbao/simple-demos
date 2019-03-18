@@ -17,16 +17,30 @@
     </style>
   </head>
   <body>
+    <p>对于文本复制目前是支持的 对于图片复制不支持。</p>
+    <a
+      href="https://stackoverflow.com/questions/10221298/copy-image-to-clipboard-not-working-in-firefox-chrome"
+      >详细链接</a
+    >
     <div id="container">
-      <img class="image" src="../images/mse.png" onclick="ButtonClick(this)" />
+      <img class="image" src="../images/mse.png" onclick="ButtonClick()" />
     </div>
+    <button id="btn">复制</button>
 
     <script lang="javascript">
-
-      function ButtonClick(div)
-      {
-
-      };
+      const $ = document.querySelector.bind(document);
+      const btn = $('#btn');
+      btn.addEventListener('click',()=>{
+        const input = document.createElement('input');
+        document.body.appendChild(input);
+        input.setAttribute('value', '听说你想复制我');
+        input.select();
+        if(document.execCommand('copy')){
+          document.execCommand('copy');
+          alert('复制成功右键或者ctrl+v粘贴');
+        }
+        document.body.removeChild(input);
+      })
     </script>
   </body>
 </html>
