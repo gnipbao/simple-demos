@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>multi video autoplay</title>
+  </head>
+  <body>
+    <div id="container">
+      <video id="video1" controls autoplay>
+        <source src="../video/chrome.mp4" type="video/mp4" />
+        <p>This browser does not support the video element.</p>
+      </video>
+
+      <video id="video2" controls>
+        <source src="../video/chrome.mp4" type="video/mp4" />
+        <p>This browser does not support the video element.</p>
+      </video>
+
+      <video id="video3" controls>
+        <source src="../video/chrome.mp4" type="video/mp4" />
+        <p>This browser does not support the video element.</p>
+      </video>
+
+      <video id="video4" controls>
+        <source src="../video/chrome.mp4" type="video/mp4" />
+        <p>This browser does not support the video element.</p>
+      </video>
+
+      <p id="video1Src"></p>
+      <p id="video2Src"></p>
+
+      <script>
+        document
+          .querySelector('#video1')
+          .addEventListener('loadedmetadata', function() {
+            var fileName = this.currentSrc.replace(/^.*[\\\/]/, '');
+            document.querySelector('#video1Src').textContent =
+              'Playing video1: ' + fileName;
+          });
+
+        document
+          .querySelector('#video2')
+          .addEventListener('loadedmetadata', function() {
+            var fileName = this.currentSrc.replace(/^.*[\\\/]/, '');
+            document.querySelector('#video2Src').textContent =
+              'Playing video2: ' + fileName;
+          });
+      </script>
+    </div>
+  </body>
+</html>
