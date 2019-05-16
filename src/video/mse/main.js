@@ -33,11 +33,10 @@ const play = video => {
   }
 };
 
-const sourceOpenHandler = () => {
+const sourceOpenHandler = function() {
   let sourceBuffer = mediaSource.addSourceBuffer(
     'video/webm; codecs="vorbis,vp8"',
   );
-  console.log(sourceBuffer);
   log('MediaSource readyState: ' + this.readyState);
   let i = 0;
   get(FILE, function(uInt8Arr) {
