@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>MediaSource API</title>
+  </head>
+
+  <body>
+    <video controls></video>
+    <p>
+      The demo splits a WebM video into 5 chunks using the File APIs. The entire
+      movie is 'streamed' to a video element by appending each chunk using the
+      MediaSource API.
+    </p>
+    <div id="data"></div>
+    <script src="./main.js"></script>
+  </body>
+</html>
