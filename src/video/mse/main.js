@@ -1,4 +1,4 @@
-const FILE = '../video/chrome.webm';
+const FILE = '../video/vp9_chrome.webm';
 const NUM_CHUNKS = 6;
 const video = document.querySelector('video');
 
@@ -35,7 +35,7 @@ const play = video => {
 
 const sourceOpenHandler = function() {
   let sourceBuffer = mediaSource.addSourceBuffer(
-    'video/webm; codecs="vorbis,vp8"',
+    'video/webm; codecs="opus,vp9"',
   );
   log('MediaSource readyState: ' + this.readyState);
   let i = 0;
