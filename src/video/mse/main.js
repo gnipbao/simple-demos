@@ -1,16 +1,22 @@
-const FILE = '../video/vp9_chrome.webm';
-const NUM_CHUNKS = 6;
-const video = document.querySelector('video');
+const FILE = './video/chunk-stream0-1.webm';
+const NUM_CHUNKS = 1;
+let baseUrl = './video/';
+let initVideoUrl = baseUrl + 'init-stream0.webm';
+let initAudioUrl = baseUrl + 'init-stream1.webm';
+let index = 1,
+  idx = 1;
+let sourceBuffer, audioSourceBuffer;
+let video = document.querySelector('video');
 
 if (!window.MediaSource) {
   console.log('The MediaSource API is not available on this platform!');
 }
 
-const mediaSource = new MediaSource();
+let mediaSource = new MediaSource();
 
 video.src = window.URL.createObjectURL(mediaSource);
 
-const play = video => {
+let play = video => {
   const playPromise = video.play();
   // In browsers that don’t yet support this functionality,
   // playPromise won’t be defined.
@@ -33,10 +39,8 @@ const play = video => {
   }
 };
 
-const sourceOpenHandler = function() {
-  let sourceBuffer = mediaSource.addSourceBuffer(
-    'video/webm; codecs="opus,vp9"',
-  );
+let sourceOpenHandler = function() {
+  let sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp9"');
   log('MediaSource readyState: ' + this.readyState);
   let i = 0;
   get(FILE, function(uInt8Arr) {
@@ -76,12 +80,83 @@ const sourceOpenHandler = function() {
   });
 };
 
-mediaSource.addEventListener('sourceopen', sourceOpenHandler);
+let sourceOpenHandler1 = function() {
+  let sourceBuffer = mediaSource.addSourceBuffer(
+    'video/webm; codecs="opus,vp9"',
+  );
+  log('MediaSource readyState: ' + this.readyState);
+  fetch(DATASOURCE[0])
+    .then(response => response.arrayBuffer())
+    .then(buffer => {
+      let file = new Blob([new Uint8Array(buffer)], {
+        type: 'video/webm',
+      });
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        sourceBuffer.appendBuffer(new Uint8Array(e.target.result));
+        let appendHandler = function(e) {
+          var sourceBuffer = e.target;
+          sourceBuffer.removeEventListener('updateend', appendHandler);
+          if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
+            mediaSource.endOfStream();
+          }
+        };
+      };
+      reader.readAsArrayBuffer(file);
+    });
+};
+
+let nextVideoSegment = () => {
+  let url = baseUrl + `chunk-stream0-${index}.webm`;
+  get(url, appendToBuffer);
+  index++;
+  if (index > 3) {
+    videoSourceBuffer.removeEventListener('updateend', nextVideoSegment);
+  }
+};
+
+let nextAudioSegment = () => {
+  let url = baseUrl + `chunk-stream1-${idx}.webm`;
+  get(url, appendAudioBuffer);
+  idx++;
+  if (idx > 3) {
+    audioSourceBuffer.removeEventListener('updateend', nextAudioSegment);
+  }
+};
+
+let appendToBuffer = trunk => {
+  if (trunk) {
+    videoSourceBuffer.appendBuffer(new Uint8Array(trunk));
+  }
+};
+
+let appendAudioBuffer = trunk => {
+  if (trunk) {
+    audioSourceBuffer.appendBuffer(new Uint8Array(trunk));
+  }
+};
+
+let onMediaSourceOpen = function() {
+  videoSourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp9"'); // opus
+  audioSourceBuffer = mediaSource.addSourceBuffer('audio/webm; codecs="opus"');
+  log('MediaSource readyState: ' + this.readyState);
+  videoSourceBuffer.addEventListener('updateend', nextVideoSegment);
+  audioSourceBuffer.addEventListener('updateend', nextAudioSegment);
+  mediaSource.duration = 734.178;
+  get(initVideoUrl, appendToBuffer);
+  get(initAudioUrl, appendAudioBuffer);
+  // play(video);
+};
+
+mediaSource.addEventListener('sourceopen', onMediaSourceOpen);
 mediaSource.addEventListener('sourceended', function() {
   log('MediaSource readyState: ' + this.readyState);
 });
+mediaSource.addEventListener('error', function(e) {
+  console.log('error: ' + mediaSource.readyState);
+});
 
-const get = (url, cb) => {
+let get = (url, cb) => {
   const xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
   xhr.responseType = 'arraybuffer';
@@ -95,6 +170,6 @@ const get = (url, cb) => {
   };
 };
 
-const log = msg => {
+let log = msg => {
   document.getElementById('data').innerHTML += msg + '<br /><br />';
 };
